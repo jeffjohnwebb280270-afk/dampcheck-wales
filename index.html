@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DampCheck Wales — free help with damp and mould in Welsh rented homes</title>
+<meta name="description" content="Free tool for contract-holders in Wales. Work out what your damp or mould is, build a dated record of your report under the Renting Homes (Wales) Act 2016, and generate the letter that puts it in writing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#15202B;
+  --deep:#1E4536;
+  --paper:#FAF8F3;
+  --card:#FFFFFF;
+  --line:rgba(21,32,43,.13);
+  --line-d:rgba(250,248,243,.16);
+  --mid:#5F6C78;
+  --ok:#1F6F4A;
+  --warn:#B45309;
+  --late:#A31D1D;
+  --f-d:'Archivo','Helvetica Neue',sans-serif;
+  --f-b:'Inter',system-ui,sans-serif;
+  --f-m:'IBM Plex Mono',ui-monospace,monospace;
+  --pad:clamp(18px,5vw,56px);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-b);font-size:17px;line-height:1.6}
+img,svg{max-width:100%;display:block}
+:focus-visible{outline:3px solid var(--deep);outline-offset:2px}
+.wrap{max-width:840px;margin:0 auto;padding:0 var(--pad)}
+.band{padding:clamp(38px,7vw,68px) 0}
+.band--tight{padding:clamp(26px,4vw,40px) 0}
+.band--deep{background:var(--deep);color:#EBF2ED}
+.band--ink{background:var(--ink);color:#E8EDF2}
+
+h1,h2,h3{font-family:var(--f-d);font-weight:800;letter-spacing:-.025em;line-height:1.08;margin:0 0 .5em}
+h1{font-size:clamp(32px,6.4vw,52px)}
+h2{font-size:clamp(24px,4vw,34px);font-weight:700}
+h3{font-size:clamp(18px,2.6vw,21px);font-weight:700;letter-spacing:-.015em}
+p{margin:0 0 1em;max-width:64ch}
+.lede{font-size:clamp(17px,2.2vw,20px);line-height:1.5;color:#33414D}
+.band--deep .lede,.band--ink .lede{color:rgba(235,242,237,.82)}
+.eyebrow{font-family:var(--f-m);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin:0 0 14px;display:flex;align-items:center;gap:9px}
+.eyebrow::before{content:"";width:20px;height:2px;background:currentColor;opacity:.5}
+.band--deep .eyebrow,.band--ink .eyebrow{color:rgba(235,242,237,.6)}
+.small{font-size:14.5px;color:var(--mid);line-height:1.55}
+
+header.site{background:var(--ink);color:#E8EDF2;position:sticky;top:0;z-index:50}
+.hbar{display:flex;align-items:center;gap:14px;padding:12px 0}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.logo b{font-family:var(--f-d);font-weight:800;font-size:16px;letter-spacing:-.02em;line-height:1}
+.logo span{font-family:var(--f-m);font-size:9px;letter-spacing:.15em;text-transform:uppercase;opacity:.6;display:block;margin-top:3px}
+.logo .m{width:26px;height:33px;flex:none}
+.logo .m path{fill:#E8EDF2}
+.hbar .free{margin-left:auto;font-family:var(--f-m);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  border:1px solid var(--line-d);padding:6px 10px;border-radius:2px;opacity:.85}
+
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-d);font-size:15.5px;font-weight:600;
+  padding:14px 22px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);text-decoration:none;
+  cursor:pointer;border-radius:3px;transition:.16s}
+.btn:hover{background:transparent;color:var(--ink)}
+.btn--o{background:transparent;color:var(--ink)}
+.btn--o:hover{background:var(--ink);color:var(--paper)}
+.btn--l{background:#EBF2ED;border-color:#EBF2ED;color:var(--deep)}
+.btn--l:hover{background:transparent;color:#EBF2ED}
+.btnrow{display:flex;flex-wrap:wrap;gap:11px;margin-top:22px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:22px}
+.band--deep .card,.band--ink .card{background:rgba(255,255,255,.06);border-color:var(--line-d)}
+.cols{display:grid;gap:16px}
+.c2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:680px){.c2{grid-template-columns:1fr}}
+
+.opts{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
+@media(max-width:600px){.opts{grid-template-columns:1fr}}
+.opt{border:2px solid var(--line);background:#fff;padding:15px 16px;text-align:left;cursor:pointer;border-radius:3px;
+  font-family:var(--f-b);font-size:15.5px;font-weight:500;color:var(--ink);transition:.14s;line-height:1.35}
+.opt:hover{border-color:var(--deep)}
+.opt.sel{border-color:var(--deep);background:#E7F0EA;box-shadow:inset 0 0 0 1px var(--deep)}
+.opt small{display:block;font-size:13px;color:var(--mid);margin-top:4px;font-weight:400}
+.opt.sel small{color:#334252}
+
+input[type=text],input[type=date],input[type=email],textarea{
+  width:100%;padding:14px 15px;border:2px solid var(--line);border-radius:3px;font-family:var(--f-b);
+  font-size:16px;background:#fff;color:var(--ink);margin-bottom:12px}
+label.fl{display:block;font-family:var(--f-m);font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--mid);margin-bottom:7px}
+
+.dl{border-left:5px solid var(--line);padding:16px 0 16px 18px;margin-bottom:14px}
+.dl h4{font-family:var(--f-d);font-size:16.5px;margin:0 0 4px;font-weight:700}
+.dl .date{font-family:var(--f-m);font-size:21px;font-weight:600;letter-spacing:-.02em;margin:6px 0 4px}
+.dl p{font-size:14.5px;color:var(--mid);margin:0}
+.dl.ok{border-left-color:var(--ok)} .dl.ok .date{color:var(--ok)}
+.dl.warn{border-left-color:var(--warn)} .dl.warn .date{color:var(--warn)}
+.dl.late{border-left-color:var(--late)} .dl.late .date{color:var(--late)}
+.pill{display:inline-block;font-family:var(--f-m);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  padding:4px 9px;border-radius:2px;margin-left:8px;vertical-align:2px}
+.pill.ok{background:#E4F1EA;color:var(--ok)}
+.pill.warn{background:#FBEEDD;color:var(--warn)}
+.pill.late{background:#F8E4E4;color:var(--late)}
+
+.elapsed{font-family:var(--f-m);text-align:center;padding:20px 0 8px}
+.elapsed b{display:block;font-size:clamp(46px,12vw,78px);font-weight:600;letter-spacing:-.05em;line-height:1;color:#EBF2ED}
+.elapsed span{font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.6;display:block;margin-top:10px}
+
+.acc{border-top:1px solid var(--line)}
+.acc button{width:100%;background:none;border:0;border-bottom:1px solid var(--line);padding:17px 32px 17px 0;
+  text-align:left;cursor:pointer;position:relative;font-family:var(--f-d);font-size:16.5px;font-weight:600;color:inherit}
+.acc button::after{content:"+";position:absolute;right:4px;top:50%;transform:translateY(-50%);font-family:var(--f-m);font-size:19px;color:#8FA8BF}
+.acc button[aria-expanded="true"]::after{content:"–"}
+.acc .panel{display:none;padding:2px 0 20px;border-bottom:1px solid var(--line)}
+.acc .panel.open{display:block}
+.acc .panel p{font-size:15.5px}
+
+.letter{width:100%;min-height:340px;font-family:var(--f-m);font-size:13px;line-height:1.65;white-space:pre-wrap}
+.note{border:1px dashed var(--line);border-radius:3px;padding:14px 16px;font-family:var(--f-m);font-size:11.5px;
+  line-height:1.65;color:var(--mid);margin-top:22px}
+.band--deep .note,.band--ink .note{border-color:var(--line-d);color:rgba(235,242,237,.62)}
+
+.steps{counter-reset:s;list-style:none;padding:0;margin:22px 0 0}
+.steps li{counter-increment:s;position:relative;padding:0 0 22px 46px;border-left:2px solid var(--line);margin-left:14px}
+.steps li:last-child{border-left-color:transparent;padding-bottom:0}
+.steps li::before{content:counter(s);position:absolute;left:-15px;top:-2px;width:28px;height:28px;border-radius:50%;
+  background:var(--deep);color:#fff;font-family:var(--f-m);font-size:13px;display:grid;place-items:center;font-weight:600}
+.steps h3{margin-bottom:5px}
+.steps p{font-size:15.5px;margin-bottom:0}
+
+footer.site{background:var(--ink);color:rgba(232,237,242,.6);padding:44px 0 30px;font-size:14.5px}
+footer.site a{color:rgba(232,237,242,.85)}
+footer.site h4{color:#E8EDF2;font-family:var(--f-m);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin:0 0 12px}
+.fgrid{display:grid;gap:26px;grid-template-columns:repeat(3,1fr)}
+@media(max-width:680px){.fgrid{grid-template-columns:1fr}}
+.fbtm{border-top:1px solid var(--line-d);margin-top:32px;padding-top:20px;font-family:var(--f-m);font-size:11.5px;line-height:1.7}
+
+.band--deep .small,.band--ink .small{color:rgba(255,255,255,.78)}
+.band--deep label.fl,.band--ink label.fl{color:rgba(255,255,255,.72)}
+.band--deep .card p,.band--ink .card p{color:rgba(255,255,255,.86)}
+.band--deep .card .small,.band--ink .card .small{color:rgba(255,255,255,.72)}
+.band--deep .note,.band--ink .note{color:rgba(255,255,255,.74);border-color:rgba(255,255,255,.28)}
+.band--deep .note b,.band--ink .note b{color:#fff}
+.band--deep .dl p,.band--ink .dl p{color:rgba(255,255,255,.72)}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}html{scroll-behavior:auto}}
+@media print{header.site,footer.site,.btnrow,.noprint{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap hbar">
+    <a class="logo" href="#top">
+      <svg class="m" viewBox="0 0 796.8 1000.0" aria-hidden="true"><path d="M665.9,79.1 714.4,111.1 775.9,242.7 693.4,229.2 653.3,262.8 649.2,306.3 703.2,338.2 656.8,437.5 698.5,431.2 627.4,485.9 704.7,534.5 654.2,660.3 702.9,741.1 796.8,784.9 791.3,885.5 698.8,912.2 604.6,1000.0 524.5,989.7 435.5,882.3 384.2,916.6 305.4,915.8 305.4,885.6 371.0,856.7 297.8,855.9 282.9,801.1 110.6,895.7 57.2,855.5 139.4,838.1 145.5,797.8 112.9,807.9 119.8,835.9 38.3,850.1 18.4,828.3 60.0,806.3 57.9,774.2 0.0,764.3 3.8,741.2 297.6,591.2 359.3,518.0 375.2,437.3 407.9,427.6 354.6,400.7 395.6,336.7 347.5,298.4 368.9,242.1 270.5,258.9 237.6,309.5 168.6,312.5 172.3,289.4 285.0,192.1 338.9,99.2 442.6,64.1 428.5,40.2 511.1,64.2 592.4,33.3 665.9,79.1ZM362.8,54.0 362.8,83.2 270.5,141.9 221.3,70.8 221.3,13.1 295.0,0.0 331.3,59.5 362.8,54.0Z"/></svg>
+      <span><b>DampCheck Wales</b><span>Free help for renters</span></span>
+    </a>
+    <span class="free">No sign-up · No charge</span>
+  </div>
+</header>
+
+<main id="top">
+
+<div class="band band--ink">
+  <div class="wrap">
+    <p class="eyebrow">Damp or mould in a rented home in Wales</p>
+    <h1>No deadline doesn't mean<br>no obligation.</h1>
+    <p class="lede" style="margin-top:18px">Wales has no Awaab's Law. There is no ten-day clock and no fixed date your landlord has to hit. What Wales has instead is a duty that never switches off: under the Renting Homes (Wales) Act 2016, your home must be fit for human habitation for the whole of your contract — and damp and mould are named hazards.</p>
+    <p class="lede">Without a deadline, what wins is a record. This free tool helps you build one.</p>
+    <div class="btnrow">
+      <a class="btn btn--l" href="#checker">Start — what am I looking at?</a>
+      <a class="btn" style="background:transparent;border-color:var(--line-d);color:#E8EDF2" href="#record">Skip to the repair record</a>
+    </div>
+  </div>
+</div>
+
+<div class="band" id="checker">
+  <div class="wrap">
+    <p class="eyebrow">Step one</p>
+    <h2>What are you actually looking at?</h2>
+    <p class="lede">Damp gets treated as one problem. It is at least four, with different causes and different people responsible. Answer these and we will tell you which is most likely — and whose job it is.</p>
+
+    <div class="card" style="margin-top:26px">
+      <label class="fl">Your home is</label>
+      <div class="opts" data-g="tenure" data-mode="one" style="margin-bottom:24px">
+        <button class="opt" data-v="private">Privately rented<small>From a landlord or letting agent</small></button>
+        <button class="opt" data-v="social">Social housing<small>Council or housing association</small></button>
+        <button class="opt" data-v="owner">I own it<small>Including a leasehold flat</small></button>
+      </div>
+
+      <label class="fl">What can you see? Choose everything that applies</label>
+      <div class="opts" data-g="signs" data-mode="many">
+        <button class="opt" data-v="tide">A tide mark low down the wall<small>A fairly level line, usually below waist height</small></button>
+        <button class="opt" data-v="mould">Black spotted mould<small>In corners, on cold walls, behind furniture</small></button>
+        <button class="opt" data-v="plaster">Bubbling, blown or salty plaster<small>Paint lifting, white crystals, crumbling</small></button>
+        <button class="opt" data-v="patch">One patch in one place<small>Under a window, beside a chimney, on one spot</small></button>
+        <button class="opt" data-v="rain">It gets worse after heavy rain<small>Within a day or two of a downpour</small></button>
+        <button class="opt" data-v="winter">Worse in winter, windows stream<small>Better in summer, water on the glass</small></button>
+        <button class="opt" data-v="smell">A musty smell<small>Strongest in one room or near the floor</small></button>
+        <button class="opt" data-v="timber">Soft or crumbling wood<small>Skirtings, floorboards, window frames</small></button>
+        <button class="opt" data-v="fungus">Mushroom-like growth or rust-red dust<small>White strands, orange or red dust</small></button>
+        <button class="opt" data-v="health">Someone here has a health condition<small>Asthma, COPD, a baby, or someone elderly</small></button>
+      </div>
+      <div class="btnrow"><button class="btn" id="diagnose">Show me what this suggests</button></div>
+      <div id="result" style="margin-top:22px"></div>
+    </div>
+  </div>
+</div>
+<div class="band band--deep" id="record">
+  <div class="wrap">
+    <p class="eyebrow">Step two</p>
+    <h2 style="color:#EBF2ED">Build the record.</h2>
+    <p class="lede">In Wales there is no statutory deadline, so nobody can tell you your landlord is "late" on a fixed date. What a council officer, an ombudsman or a judge will ask instead is simple: when did you tell them, what did you tell them, and what have they done since. Answer those three well and you are in a strong position. Answer them vaguely and you are not.</p>
+
+    <div class="card" style="margin-top:24px">
+      <label class="fl" for="reported">The date you first reported it to your landlord</label>
+      <input type="date" id="reported">
+      <p class="small" style="margin:-2px 0 16px">Use the <b>first</b> date you told them, even if it was a phone call or a text. If you have reported it several times, we will get to that in the letter.</p>
+      <div class="btnrow" style="margin-top:0"><button class="btn" id="calc">Show me where I stand</button></div>
+      <div id="dlout" style="margin-top:24px"></div>
+    </div>
+
+    <div class="note">
+      The stages below are not legal deadlines — Wales has none for damp and mould. They are the points at which the next escalation route generally becomes available and worth using. What counts as a reasonable time depends on how serious the hazard is and who lives in the property.
+    </div>
+  </div>
+</div>
+
+<div class="band" id="letter">
+  <div class="wrap">
+    <p class="eyebrow">Step three</p>
+    <h2>Put it in writing, with a date on it.</h2>
+    <p class="lede">This is the single most useful thing you can do, and in Wales it matters more than anywhere else in Britain — because with no statutory clock, the date of your written report is the only clock there is. Fill this in and copy it into an email.</p>
+
+    <div class="card" style="margin-top:24px">
+      <div class="cols c2">
+        <div>
+          <label class="fl" for="lname">Your name</label>
+          <input type="text" id="lname" placeholder="Your full name">
+        </div>
+        <div>
+          <label class="fl" for="laddr">Property address</label>
+          <input type="text" id="laddr" placeholder="14 Example Street, Cardiff">
+        </div>
+      </div>
+      <div class="cols c2">
+        <div>
+          <label class="fl" for="lland">Landlord or agent name</label>
+          <input type="text" id="lland" placeholder="Who you rent from">
+        </div>
+        <div>
+          <label class="fl" for="lfirst">Date you first noticed it</label>
+          <input type="date" id="lfirst">
+        </div>
+      </div>
+      <label class="fl" for="lrooms">Which rooms are affected</label>
+      <input type="text" id="lrooms" placeholder="Back bedroom and the hall cupboard">
+      <label class="fl" for="lextra">Anything else they should know</label>
+      <textarea id="lextra" rows="3" placeholder="I reported this by phone on 3 March and again on 20 April. My daughter has asthma. The extractor fan in the bathroom has never worked."></textarea>
+      <div class="btnrow"><button class="btn" id="genletter">Write my letter</button></div>
+      <div id="letterout" style="margin-top:22px"></div>
+    </div>
+  </div>
+</div>
+
+<div class="band band--tight" style="border-top:1px solid var(--line)">
+  <div class="wrap">
+    <p class="eyebrow">If nothing happens</p>
+    <h2>Four routes, in order of effort.</h2>
+    <ol class="steps">
+      <li>
+        <h3>Chase in writing, once</h3>
+        <p>Reply to your own email so the original date sits in the thread. State how long it has been and ask them to confirm a date for inspection. Keep it short and unemotional — this is evidence, not an argument.</p>
+      </li>
+      <li>
+        <h3>Your council's environmental health team</h3>
+        <p>This is the strongest free route in Wales and the most underused. Councils assess hazards under the Housing Health and Safety Rating System and can serve notices requiring your landlord to act. Damp and mould score heavily, particularly where a child, an older person or someone with a respiratory condition lives in the property. It costs you nothing and you do not need a solicitor.</p>
+      </li>
+      <li>
+        <h3>Rent Smart Wales</h3>
+        <p>Something renters in England and Scotland do not have. Every private landlord in Wales must be registered, and anyone managing a property must be licensed. Licence holders are expected to comply with the law, and Rent Smart Wales can take action against those who do not. Mentioning that you are aware of this tends to concentrate minds.</p>
+      </li>
+      <li>
+        <h3>Ombudsman, or the county court</h3>
+        <p>If you rent from a council or housing association, exhaust their formal complaints process and then go to the <b>Public Services Ombudsman for Wales</b> — free, and independent. For private landlords, a disrepair claim in the county court can order the work done and award compensation. Get free advice from <b>Shelter Cymru</b> or <b>Citizens Advice</b> before starting anything.</p>
+      </li>
+    </ol>
+    <div class="note" style="border-color:rgba(21,32,43,.2)">
+      <b>Worried about being evicted for complaining?</b><br>
+      It is the commonest reason people stay quiet, and it is worth knowing that the Renting Homes (Wales) Act 2016 contains protection against retaliatory eviction. Where a landlord serves a no-fault notice because a contract-holder asked for repairs, a court may refuse to grant possession. Get advice from Shelter Cymru if you are served with a notice after reporting a problem — do not simply move out.
+    </div>
+  </div>
+</div>
+
+<div class="band band--ink">
+  <div class="wrap">
+    <p class="eyebrow">The rules, in plain English</p>
+    <h2 style="color:#E8EDF2">What the law actually says in Wales.</h2>
+    <div class="acc" id="law" style="margin-top:22px;border-color:var(--line-d)">
+      <button aria-expanded="false" style="border-color:var(--line-d);color:#E8EDF2">Fitness for human habitation</button>
+      <div class="panel" style="border-color:var(--line-d)">
+        <p style="color:rgba(232,237,242,.8)">Under the Renting Homes (Wales) Act 2016, every occupation contract includes a term that the landlord must ensure the dwelling is fit for human habitation — at the start of the contract and throughout it. The fitness regulations set out the matters that make a home unfit, and damp and mould growth is one of them.</p>
+        <p style="color:rgba(232,237,242,.8)">This is not optional and your landlord cannot contract out of it, cannot charge you for meeting it, and cannot make you responsible for it in your contract. If they have not given you a written statement of your occupation contract, that is a separate failure worth mentioning.</p>
+      </div>
+      <button aria-expanded="false" style="border-color:var(--line-d);color:#E8EDF2">Why there is no ten-day deadline here</button>
+      <div class="panel" style="border-color:var(--line-d)">
+        <p style="color:rgba(232,237,242,.8)">Housing is devolved, so Britain has three different systems. England's Awaab's Law came into force in October 2025 but applies only to <i>social</i> landlords. Scotland's version starts on 6 October 2026 and covers private landlords too. Wales has neither — instead it relies on the fitness duty above, which is continuous rather than time-limited.</p>
+        <p style="color:rgba(232,237,242,.8)">In practice that means a Welsh landlord is not "in breach on day eleven" the way an English social landlord is. They are in breach the whole time the home is unfit. That is weaker in one way and stronger in another, and it is why the record matters so much.</p>
+      </div>
+      <button aria-expanded="false" style="border-color:var(--line-d);color:#E8EDF2">Ventilation, heating and the condensation argument</button>
+      <div class="panel" style="border-color:var(--line-d)">
+        <p style="color:rgba(232,237,242,.8)">Expect to be told you are drying washing indoors and not opening windows. Sometimes lifestyle is genuinely part of it. But mould is also caused by cold surfaces, missing or broken extract fans, windows that will not open, poor insulation and heating too expensive to run — and those sit on the landlord's side of the line, because they are part of whether the home is fit.</p>
+        <p style="color:rgba(232,237,242,.8)">If the extractor fan in your bathroom or kitchen does not work, say so explicitly in writing. It is a concrete defect, it is cheap to fix, and it undercuts the lifestyle argument immediately.</p>
+      </div>
+      <button aria-expanded="false" style="border-color:var(--line-d);color:#E8EDF2">Council powers — the HHSRS</button>
+      <div class="panel" style="border-color:var(--line-d)">
+        <p style="color:rgba(232,237,242,.8)">Your local authority assesses housing hazards under the Housing Health and Safety Rating System, which treats damp and mould growth as a hazard in its own right. Severity is judged partly on who is exposed, so a household with a baby, an older person or someone with asthma or COPD scores higher. Where the hazard is serious enough, the council can require the landlord to act.</p>
+      </div>
+      <button aria-expanded="false" style="border-color:var(--line-d);color:#E8EDF2">If you own your home</button>
+      <div class="panel" style="border-color:var(--line-d)">
+        <p style="color:rgba(232,237,242,.8)">None of the above applies to you directly — there is no landlord to pursue. But the diagnosis half of this tool still works, and it is worth knowing that most damp reported as rising damp turns out to be something cheaper: a leaking downpipe, ground piled above the damp-proof course, a blocked airbrick, or condensation. Get the cause identified before anyone sells you a treatment.</p>
+      </div>
+    </div>
+    <div class="note">
+      <b>This is general information, not legal advice.</b><br>
+      It is written to help you understand your position and is correct as far as we know at the date below. It is not a substitute for advice on your own circumstances. Check the current legislation at legislation.gov.uk, or speak to Shelter Cymru, Citizens Advice or a solicitor.<br><br>
+      LAST REVIEWED — 13 AUGUST 2026 · WALES ONLY — the rules in England, Scotland and Northern Ireland are different
+    </div>
+  </div>
+</div>
+
+<div class="band band--tight" style="border-top:1px solid var(--line)">
+  <div class="wrap" style="text-align:center">
+    <h2 style="max-width:20ch;margin:0 auto .4em">Free, because it should be.</h2>
+    <p class="lede" style="margin:0 auto 4px">DampCheck Wales takes no fee, shows no adverts and does not pass your details to anyone. Nothing you type here leaves your phone.</p>
+  </div>
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <h4>DampCheck Wales</h4>
+        <p style="font-size:14.5px;max-width:32ch;margin:0">A free tool for contract-holders dealing with damp and mould in Welsh rented homes.</p>
+      </div>
+      <div>
+        <h4>Free advice</h4>
+        <ul style="list-style:none;padding:0;margin:0;font-size:14.5px;line-height:2">
+          <li>Shelter Cymru</li>
+          <li>Citizens Advice</li>
+          <li>Rent Smart Wales</li>
+          <li>Public Services Ombudsman for Wales</li>
+          <li>Your council's environmental health team</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <ul style="list-style:none;padding:0;margin:0;font-size:14.5px;line-height:2">
+          <li><a href="https://dampcheck-scotland.vercel.app" target="_blank" rel="noopener">DampCheck Scotland &#8599;</a></li>
+          <li><a href="https://dampcheck.vercel.app" target="_blank" rel="noopener">DampCheck England &#8599;</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fbtm">
+      Built and maintained by a PCA-qualified damp and timber business. This tool is free and carries no obligation — if it tells you the fault is your landlord's, take it to your landlord.<br>
+      © <span id="yr"></span> · General information only, not legal advice · Wales only
+    </div>
+  </div>
+</footer>
+<script>
+const fmt = d => d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const short = d => d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+const today = () => { const t=new Date(); t.setHours(0,0,0,0); return t; };
+const addDays = (d,n) => { const x=new Date(d.getTime()); x.setDate(x.getDate()+n); return x; };
+
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+const state = { tenure:'', signs:[] };
+document.querySelectorAll('.opts').forEach(g=>{
+  g.querySelectorAll('.opt').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const k=g.dataset.g;
+      if(g.dataset.mode==='one'){ g.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); b.classList.add('sel'); state[k]=b.dataset.v; }
+      else { b.classList.toggle('sel'); state[k]=[...g.querySelectorAll('.opt.sel')].map(o=>o.dataset.v); }
+    });
+  });
+});
+
+document.getElementById('diagnose').addEventListener('click',()=>{
+  const s = state.signs, out = [];
+  const box = document.getElementById('result');
+  if(!s.length){ box.innerHTML = '<p class="small" style="color:var(--late)">Choose at least one thing you can see.</p>'; return; }
+
+  if(s.includes('fungus'))
+    out.push(['Possible dry rot — get this looked at quickly','Rust-red dust and white strands point to a fungus that travels through masonry and eats structural timber. It needs a persistent water source, so something is leaking. This is the one form of damp that gets significantly worse and more expensive the longer it is left. Report it today and use the word "fungus" in writing.','late']);
+  if(s.includes('timber') && !s.includes('fungus'))
+    out.push(['Wet rot is likely','Soft, dark, crumbling wood in a wet area. Contained and fixable — but the water reaching it has not been stopped, so replacing the timber alone buys about a year.','warn']);
+  if(s.includes('patch') || s.includes('rain'))
+    out.push(['Points to penetrating damp','Water crossing the wall from outside through a specific fault: cracked render, failed pointing, a split downpipe, a slipped slate, a chimney flashing. It is a building repair and squarely a landlord repair. Say in your letter that it worsens after rain — that detail does a lot of work.','warn']);
+  if(s.includes('mould') || s.includes('winter'))
+    out.push(['Consistent with condensation and mould','Black spotted mould in cold corners, worse in winter. You will likely be told it is your lifestyle. Check whether the extractor fans actually work and whether the windows open — if they do not, those are defects, they are cheap to fix, and they shift the argument back where it belongs.','warn']);
+  if((s.includes('tide')||s.includes('plaster')||s.includes('smell')) && !s.includes('rain') && !s.includes('patch'))
+    out.push(['Worth ruling out rising damp','A level tide mark with salty, blown plaster fits rising damp — but it also fits a leak below floor level, ground piled up against an outside wall, or a blocked airbrick. It is diagnosed far more often than it actually occurs. Either way, a wall in that state is your landlord&rsquo;s to investigate.','warn']);
+  if(!out.length)
+    out.push(['Not clear-cut — report it anyway','What you have described does not point in one direction, which is common. It is not your job to diagnose it. Your landlord&rsquo;s duty is to keep the home fit to live in, and that duty is triggered by the home being unfit — not by you proving why.','warn']);
+
+  if(s.includes('health'))
+    out.push(['Say this explicitly in every letter','Councils assess housing hazards partly on who is exposed to them. A household including a child, an older person or someone with asthma or another respiratory condition raises the severity score, and that changes what the council can require your landlord to do. Never leave it out.','late']);
+
+  let who = '';
+  if(state.tenure==='private') who = '<p style="font-size:15.5px"><b>You rent privately.</b> Your landlord must keep the home fit for human habitation for the whole of your occupation contract. They must also be registered, and their agent licensed, with Rent Smart Wales.</p>';
+  if(state.tenure==='social') who = '<p style="font-size:15.5px"><b>You are a social contract-holder.</b> The same fitness duty applies. Use your landlord&rsquo;s formal complaints procedure first, then the Public Services Ombudsman for Wales — both free.</p>';
+  if(state.tenure==='owner') who = '<p style="font-size:15.5px"><b>You own your home.</b> There is no landlord to pursue, so the legal half of this tool will not help you. The diagnosis above still stands — and get the cause identified before anyone sells you a treatment.</p>';
+
+  box.innerHTML = out.map(([h,p,cls])=>
+    `<div class="dl ${cls}"><h4>${h}</h4><p style="color:var(--ink);font-size:15.5px;margin-top:6px">${p}</p></div>`).join('')
+    + who + '<p class="small">This is an indication from what you have described, not a diagnosis. Only someone standing in the room can confirm the cause.</p>'
+    + '<div class="btnrow"><a class="btn" href="#record">Next — build the record</a></div>';
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+});
+
+document.getElementById('calc').addEventListener('click',()=>{
+  const box = document.getElementById('dlout');
+  const v = document.getElementById('reported').value;
+  if(!v){ box.innerHTML='<p class="small" style="color:#FFD9D9">Put in the date you reported it.</p>'; return; }
+  const rep = new Date(v+'T00:00:00'); const now = today();
+  if(rep > now){ box.innerHTML='<p class="small" style="color:#FFD9D9">That date is in the future.</p>'; return; }
+
+  const days = Math.round((now-rep)/864e5);
+  const stages = [
+    [0,  'Reported', 'Put it in writing today if you have not already. A phone call you cannot evidence is worth very little later.', '#letter', 'Write the letter'],
+    [14, 'Chase in writing', 'Two weeks with no inspection arranged is long enough to follow up. Reply to your own email so the original date stays in the thread.', '#letter', 'Write a chaser'],
+    [28, 'Council environmental health', 'A month with nothing done is the point to involve your council. This is free, it does not need a solicitor, and it is the route landlords take most seriously.', null, null],
+    [56, 'Rent Smart Wales, or the Ombudsman', 'Two months. If private, report the landlord to Rent Smart Wales. If social, your complaint should be through their process and ready for the Public Services Ombudsman for Wales.', null, null]
+  ];
+
+  let html = `<div class="elapsed"><b>${days}</b><span>days since you reported it</span></div>`;
+  html += `<p class="small" style="color:rgba(235,242,237,.75);text-align:center;margin-bottom:24px">Reported ${short(rep)}. There is no statutory deadline in Wales — but a landlord who has done nothing in ${days} days has that fact on the record now.</p>`;
+
+  stages.forEach(([d,title,text,href,label])=>{
+    const reached = days >= d;
+    const cls = !reached ? 'ok' : (d>=28 ? 'late' : 'warn');
+    const pill = !reached ? `<span class="pill ok">From ${short(addDays(rep,d))}</span>`
+                          : `<span class="pill ${d>=28?'late':'warn'}">Available now</span>`;
+    html += `<div class="dl ${cls}"><h4>${title} ${pill}</h4>
+      <p style="color:${reached?'#EBF2ED':'rgba(235,242,237,.6)'};font-size:15px;margin-top:6px">${text}</p>
+      ${reached && href ? `<div class="btnrow" style="margin-top:12px"><a class="btn btn--l" href="${href}">${label}</a></div>` : ''}</div>`;
+  });
+
+  html += `<p class="small" style="color:rgba(235,242,237,.7);margin-top:6px">Screenshot or print this. A dated record of what you did and when is the whole game in Wales.</p>`;
+  box.innerHTML = html;
+});
+
+document.getElementById('genletter').addEventListener('click',()=>{
+  const g = id => document.getElementById(id).value.trim();
+  const name=g('lname')||'[your name]', addr=g('laddr')||'[property address]',
+        land=g('lland')||'[landlord or agent]', rooms=g('lrooms')||'[rooms affected]',
+        extra=g('lextra'), first=g('lfirst');
+  const t = today();
+  const firstTxt = first ? short(new Date(first+'T00:00:00')) : '[date you first noticed it]';
+  const signs = state.signs.filter(k=>k!=='health').length ? state.signs.filter(k=>k!=='health').map(k=>({
+    tide:'a tide mark low down the wall', mould:'black spotted mould',
+    plaster:'bubbling, blown or salty plaster', patch:'a damp patch in one specific place',
+    rain:'the problem getting worse after heavy rain', winter:'the problem being worse in winter, with condensation on the windows',
+    smell:'a persistent musty smell', timber:'soft or crumbling woodwork',
+    fungus:'fungal growth, white strands or rust-red dust'
+  }[k])).join('; ') : '[describe what you can see]';
+
+  const health = state.signs.includes('health')
+    ? '\nI should make you aware that a member of this household has a health condition affected by damp and mould. I would ask you to take that into account in how quickly you deal with this.\n' : '';
+
+  const body =
+`Date: ${fmt(t)}
+
+To: ${land}
+Property: ${addr}
+
+Dear ${land},
+
+Report of damp and mould at ${addr}
+
+I am writing to report damp and mould at the above property, which I occupy under an occupation contract. I first noticed the problem on ${firstTxt}.
+
+The affected rooms are: ${rooms}.
+
+What I can see is: ${signs}.
+${extra ? '\n' + extra + '\n' : ''}${health}
+Under the Renting Homes (Wales) Act 2016, my occupation contract includes a term that you must ensure the dwelling is fit for human habitation, both at the start of the contract and throughout it. Damp and mould growth is one of the matters taken into account in deciding whether a dwelling is fit.
+
+Please confirm in writing when you or a contractor will attend to inspect. I am happy to make the property available and can be flexible on access.
+
+I am keeping a dated record of this report and of any response to it.
+
+Yours sincerely,
+
+${name}`;
+
+  document.getElementById('letterout').innerHTML =
+    `<label class="fl">Your letter — check it, edit anything, then copy</label>
+     <textarea class="letter" id="lbody">${body.replace(/</g,'&lt;')}</textarea>
+     <div class="btnrow" style="margin-top:6px">
+       <button class="btn" id="copyl">Copy letter</button>
+       <button class="btn btn--o" id="printl">Print or save as PDF</button>
+     </div>
+     <p class="small" style="margin-top:14px">Send it by email if you can — an email gives you a timestamp neither side can argue with. Keep a copy. If you hand it over on paper, photograph it first.</p>`;
+
+  document.getElementById('copyl').addEventListener('click', async function(){
+    const ta=document.getElementById('lbody');
+    try{ await navigator.clipboard.writeText(ta.value); this.textContent='Copied'; }
+    catch(e){ ta.select(); document.execCommand('copy'); this.textContent='Copied'; }
+    setTimeout(()=>{this.textContent='Copy letter';},2200);
+  });
+  document.getElementById('printl').addEventListener('click',()=>window.print());
+  document.getElementById('letterout').scrollIntoView({behavior:'smooth',block:'nearest'});
+});
+
+document.querySelectorAll('.acc button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const open=b.getAttribute('aria-expanded')==='true';
+    b.setAttribute('aria-expanded',!open);
+    b.nextElementSibling.classList.toggle('open',!open);
+  });
+});
+</script>
+</body>
+</html>
