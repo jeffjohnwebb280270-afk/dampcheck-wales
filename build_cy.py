@@ -88,10 +88,12 @@ for attr in ('name="description"', 'property="og:title"',
     if m:
         t = look(m.group(1))
         if t: head = head.replace(m.group(0), f'{attr} content="{t}"')
-head = head.replace(f'href="{EN_URL}"', f'href="{CY_URL}"')
-head = head.replace(f'content="{EN_URL}"', f'content="{CY_URL}"')
-
-# hreflang tags are inherited from the English source — same pair on both pages
+# Only the canonical link and OG/Twitter url meta point at "this page" and
+# need to flip to the Welsh URL. The hreflang alternates must NOT be touched —
+# both pages declare the identical en-GB/cy/x-default trio, each pointing at
+# the real URL for that language, so Google can pair them up.
+head = head.replace(f'rel="canonical" href="{EN_URL}"', f'rel="canonical" href="{CY_URL}"')
+head = head.replace(f'property="og:url" content="{EN_URL}"', f'property="og:url" content="{CY_URL}"')
 
 # ---- 5. language switcher: mark Welsh as current -------------------------
 static = static.replace('<a class="lang-opt on" href="/" hreflang="en-GB">',
