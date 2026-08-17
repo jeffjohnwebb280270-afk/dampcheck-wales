@@ -25,6 +25,20 @@ html = open(SRC, encoding='utf-8').read()
 missing = []
 PROSE_MIN_WORDS = 3
 
+# ---- whole-block overrides ------------------------------------------------
+# Some English fragments split a word across a <b> boundary in a way that only
+# works in English word order — e.g. "Use the <b>first</b> date..." — because
+# Welsh puts the adjective after the noun ("y dyddiad cyntaf", not "cyntaf y
+# dyddiad"). Translating node-by-node there would emit correct words in the
+# wrong order. These are matched and swapped in as raw HTML before the normal
+# per-node pass runs, via a placeholder so they're not re-scanned afterwards.
+BLOCK_OVERRIDES = [
+    (
+        'Use the <b>first</b> date you told them, even if it was a phone call or a text. If you have reported it several times, we will get to that in the letter.',
+        "Defnyddiwch y dyddiad <b>cyntaf</b> y gwnaethoch chi roi gwybod iddyn nhw, hyd yn oed os oedd yn alwad ffôn neu'n neges destun. Os ydych chi wedi rhoi gwybod amdano sawl gwaith, byddwn yn mynd i'r afael â hynny yn y llythyr."
+    ),
+]
+
 def is_prose(key):
     """Prose, not a code fragment. Guards the script-string pass."""
     if len(key.split()) < PROSE_MIN_WORDS:
@@ -36,7 +50,7 @@ def is_prose(key):
 def look(s, prose_only=False):
     """Translate a whitespace-normalised string, recording anything unmapped."""
     key = re.sub(r'\s+', ' ', s).strip()
-    if not key or not re.search(r'[A-Za-z]{3}', key):
+    if not key or not re.search(r'[A-Za-z]{3}', key) or '\x00BLOCK' in key:
         return None
     if prose_only and not is_prose(key):
         return None
@@ -50,6 +64,16 @@ body_at = html.index('<body>')
 head, body = html[:body_at], html[body_at:]
 js_m = re.search(r'<script>([\s\S]*)</script>', body)
 static, js, tail = body[:js_m.start()], js_m.group(1), body[js_m.end():]
+
+# ---- 0. protect whole-block overrides from the per-node pass ------------
+block_map = {}
+for i, (en_html, cy_html) in enumerate(BLOCK_OVERRIDES):
+    token = f'\x00BLOCK{i}\x00'
+    if en_html in static:
+        static = static.replace(en_html, token, 1)
+        block_map[token] = cy_html
+    else:
+        print(f"WARNING: block override {i} not found in source HTML — skipped")
 
 # ---- 1. text nodes -------------------------------------------------------
 def sub_node(m):
@@ -100,6 +124,10 @@ static = static.replace('<a class="lang-opt on" href="/" hreflang="en-GB">',
                         '<a class="lang-opt" href="/" hreflang="en-GB">')
 static = static.replace('<a class="lang-opt" href="/cy" hreflang="cy">',
                         '<a class="lang-opt on" href="/cy" hreflang="cy">')
+
+# ---- 6. drop the whole-block overrides back in ----------------------------
+for token, cy_html in block_map.items():
+    static = static.replace(token, cy_html)
 
 os.makedirs(OUT_DIR, exist_ok=True)
 open(os.path.join(OUT_DIR, 'index.html'), 'w', encoding='utf-8').write(head + static + '<script>' + js + '</script>' + tail)
