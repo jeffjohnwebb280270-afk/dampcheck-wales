@@ -1,0 +1,117 @@
+#!/usr/bin/env python3
+"""
+Generate the Welsh page (cy/index.html) from the English one.
+
+The Welsh copy lives in i18n/cy.json as a plain English->Welsh map, so it can be
+corrected by a translator who has never seen the code: edit the JSON, re-run this,
+and the page is rebuilt. Anything still missing from the map is reported rather
+than silently left in English.
+
+    python3 build_cy.py
+"""
+import json, os, re, sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+SRC = os.path.join(HERE, 'index.html')
+OUT_DIR = os.path.join(HERE, 'cy')
+MAP = os.path.join(HERE, 'i18n', 'cy.json')
+
+EN_URL = 'https://www.dampcheckwales.co.uk/'
+CY_URL = 'https://www.dampcheckwales.co.uk/cy/'
+
+tr = json.load(open(MAP, encoding='utf-8'))
+html = open(SRC, encoding='utf-8').read()
+
+missing = []
+PROSE_MIN_WORDS = 3
+
+def is_prose(key):
+    """Prose, not a code fragment. Guards the script-string pass."""
+    if len(key.split()) < PROSE_MIN_WORDS:
+        return False
+    if re.search(r'[{}();=<>]|=>|\bfunction\b|\bconst\b|classList|querySelector', key):
+        return False
+    return bool(re.match(r"^[A-Z\u00c0-\u017f\"\u2018\u201c]", key.strip()))
+
+def look(s, prose_only=False):
+    """Translate a whitespace-normalised string, recording anything unmapped."""
+    key = re.sub(r'\s+', ' ', s).strip()
+    if not key or not re.search(r'[A-Za-z]{3}', key):
+        return None
+    if prose_only and not is_prose(key):
+        return None
+    if key in tr and tr[key].strip():
+        return tr[key]
+    missing.append(key)
+    return None
+
+# ---- split the document so we only translate prose, never markup or code ----
+body_at = html.index('<body>')
+head, body = html[:body_at], html[body_at:]
+js_m = re.search(r'<script>([\s\S]*)</script>', body)
+static, js, tail = body[:js_m.start()], js_m.group(1), body[js_m.end():]
+
+# ---- 1. text nodes -------------------------------------------------------
+def sub_node(m):
+    lead, txt, trail = m.group(1), m.group(2), m.group(3)
+    t = look(txt)
+    return f'>{lead}{t}{trail}<' if t else m.group(0)
+static = re.sub(r'>(\s*)([^<>]+?)(\s*)<', sub_node, static)
+
+# ---- 2. translatable attributes -----------------------------------------
+def sub_attr(m):
+    t = look(m.group(2))
+    return f'{m.group(1)}="{t}"' if t else m.group(0)
+static = re.sub(r'(placeholder|aria-label|title|alt)="([^"]+)"', sub_attr, static)
+
+# ---- 3. single-quoted strings inside the script --------------------------
+def sub_js(m):
+    raw = m.group(1)
+    t = look(raw, prose_only=True)
+    if not t:
+        return m.group(0)
+    # Welsh is full of apostrophes ('r, 'n, 'ch) which would close the JS string
+    esc = t.replace('\\', '\\\\').replace("'", "\\'")
+    return f"'{esc}'"
+js = re.sub(r"'((?:[^'\\]|\\.){15,})'", sub_js, js)
+
+# ---- 4. head: lang, canonical, hreflang, title, description --------------
+head = head.replace('<html lang="en-GB">', '<html lang="cy">')
+for tag, pat in (('title', r'<title>([\s\S]*?)</title>'),):
+    m = re.search(pat, head)
+    t = look(m.group(1))
+    if t: head = head.replace(m.group(0), f'<{tag}>{t}</{tag}>')
+for attr in ('name="description"', 'property="og:title"',
+             'property="og:description"', 'name="twitter:title"',
+             'name="twitter:description"'):
+    m = re.search(re.escape(attr) + r' content="([^"]*)"', head)
+    if m:
+        t = look(m.group(1))
+        if t: head = head.replace(m.group(0), f'{attr} content="{t}"')
+head = head.replace(f'href="{EN_URL}"', f'href="{CY_URL}"')
+head = head.replace(f'content="{EN_URL}"', f'content="{CY_URL}"')
+
+# hreflang tags are inherited from the English source — same pair on both pages
+
+# ---- 5. language switcher: mark Welsh as current -------------------------
+static = static.replace('<a class="lang-opt on" href="/" hreflang="en-GB">',
+                        '<a class="lang-opt" href="/" hreflang="en-GB">')
+static = static.replace('<a class="lang-opt" href="/cy" hreflang="cy">',
+                        '<a class="lang-opt on" href="/cy" hreflang="cy">')
+
+os.makedirs(OUT_DIR, exist_ok=True)
+open(os.path.join(OUT_DIR, 'index.html'), 'w', encoding='utf-8').write(head + static + '<script>' + js + '</script>' + tail)
+
+uniq = sorted(set(missing))
+done = len(tr) - len([k for k in tr if not tr[k].strip()])
+print(f"cy/index.html written — {done} strings translated, {len(uniq)} still English")
+if uniq:
+    print("\nNot yet translated:")
+    for s in uniq[:40]:
+        print(f"  - {s[:100]}")
+    if len(uniq) > 40:
+        print(f"  ... and {len(uniq)-40} more")
+    json.dump({s: "" for s in uniq}, open(os.path.join(HERE, 'i18n', 'cy.todo.json'), 'w'),
+              indent=1, ensure_ascii=False)
+    print(f"\nWritten to i18n/cy.todo.json for a translator to fill in.")
+sys.exit(0)
