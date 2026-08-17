@@ -37,6 +37,10 @@ BLOCK_OVERRIDES = [
         'Use the <b>first</b> date you told them, even if it was a phone call or a text. If you have reported it several times, we will get to that in the letter.',
         "Defnyddiwch y dyddiad <b>cyntaf</b> y gwnaethoch chi roi gwybod iddyn nhw, hyd yn oed os oedd yn alwad ffôn neu'n neges destun. Os ydych chi wedi rhoi gwybod amdano sawl gwaith, byddwn yn mynd i'r afael â hynny yn y llythyr."
     ),
+    (
+        'If you rent from a council or housing association, exhaust their formal complaints process and then go to the <b>Public Services Ombudsman for Wales</b> — free, and independent. For private landlords, a disrepair claim in the county court can order the work done and award compensation. Get free advice from <b>Shelter Cymru</b> or <b>Citizens Advice</b> before starting anything.',
+        "Os ydych yn rhentu gan gyngor neu gymdeithas dai, dihysbyddwch eu proses gwyno ffurfiol ac yna ewch i <b>Ombwdsmon Gwasanaethau Cyhoeddus Cymru</b> — am ddim, ac yn annibynnol. Ar gyfer landlordiaid preifat, gall hawliad adfeiliad yn y llys sirol orchymyn y gwaith a wnaed a dyfarnu iawndal. Mynnwch gyngor am ddim gan <b>Shelter Cymru</b> neu <b>Cyngor ar Bopeth</b> cyn dechrau unrhyw beth."
+    ),
 ]
 
 def is_prose(key):
