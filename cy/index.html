@@ -465,9 +465,9 @@ document.getElementById('diagnose').addEventListener('click',()=>{
   if(s.includes('mould') || s.includes('winter'))
     out.push(['Yn gyson ag anwedd a llwydni','Mowld smotiau du mewn corneli oer, yn waeth yn y gaeaf. Mae\'n debyg y dywedir wrthych mai eich ffordd o fyw ydyw. Gwiriwch a yw\'r ffannau echdynnu yn gweithio mewn gwirionedd ac a yw\'r ffenestri\'n agor — os nad ydynt, mae\'r rheini\'n ddiffygion, maent yn rhad i\'w trwsio, ac maent yn symud y ddadl yn ôl lle mae\'n perthyn.','warn']);
   if((s.includes('tide')||s.includes('plaster')||s.includes('smell')) && !s.includes('rain') && !s.includes('patch'))
-    out.push(['Yn werth diystyru lleithder sy\'n codi','A level tide mark with salty, blown plaster fits rising damp — but it also fits a leak below floor level, ground piled up against an outside wall, or a blocked airbrick. It is diagnosed far more often than it actually occurs. Either way, a wall in that state is your landlord&rsquo;s to investigate.','warn']);
+    out.push(['Yn werth diystyru lleithder sy\'n codi','Mae marc llinell lefel gyda phlastr hallt sydd wedi chwyddo neu ddadfeilio yn cyd-fynd â lleithder sy\'n codi o\'r ddaear — ond mae hefyd yn cyd-fynd â gollyngiad o dan lefel y llawr, pridd wedi\'i bentyrru yn erbyn wal allanol, neu fricsen awyru sydd wedi\'i rhwystro. Gwneir diagnosis ohono lawer yn amlach nag y mae\'n digwydd mewn gwirionedd. Beth bynnag fo\'r achos, cyfrifoldeb eich landlord yw ymchwilio i wal sydd yn y cyflwr hwnnw.','warn']);
   if(!out.length)
-    out.push(['Nid yw\'n glir — rhowch wybod amdano beth bynnag','What you have described does not point in one direction, which is common. It is not your job to diagnose it. Your landlord&rsquo;s duty is to keep the home fit to live in, and that duty is triggered by the home being unfit — not by you proving why.','warn']);
+    out.push(['Nid yw\'n glir — rhowch wybod amdano beth bynnag','Nid yw\'r hyn rydych chi wedi\'i ddisgrifio yn dynodi un achos penodol, sy\'n beth cyffredin. Nid eich cyfrifoldeb chi yw gwneud diagnosis. Dyletswydd eich landlord yw cadw\'r cartref yn addas i fyw ynddo, ac mae\'r ddyletswydd honno\'n codi pan fydd y cartref yn anaddas — nid pan fyddwch chi\'n profi\'r rheswm pam.','warn']);
 
   if(s.includes('health'))
     out.push(['Dywedwch hyn yn benodol ym mhob llythyr','Mae cynghorau\'n asesu peryglon tai yn rhannol ar bwy sy\'n agored iddynt. Mae aelwyd sy\'n cynnwys plentyn, person hŷn neu rywun ag asthma neu gyflwr anadlol arall yn codi\'r sgôr difrifoldeb, ac mae hynny\'n newid yr hyn y gall y cyngor ei fynnu i\'ch landlord ei wneud. Peidiwch byth â\'i adael allan.','late']);
@@ -528,11 +528,11 @@ document.getElementById('genletter').addEventListener('click',()=>{
   const t = today();
   const firstTxt = first ? short(new Date(first+'T00:00:00')) : '[date you first noticed it]';
   const signs = state.signs.filter(k=>k!=='health').length ? state.signs.filter(k=>k!=='health').map(k=>({
-    tide:'marc llanw isel ar y wal', mould:'llwydni gyda smotiau duon',
-    plaster:'plastr yn swigenu, yn chwyddo neu\'n dangos olion halen', patch:'man llaith mewn un lle penodol',
+    tide:'marc llinell isel ar y wal', mould:'llwydni gyda smotiau duon',
+    plaster:'plastr sy\'n swigenu, yn chwyddo, yn dadfeilio neu\'n hallt', patch:'man llaith mewn un lle penodol',
     rain:'y broblem yn gwaethygu ar ôl glaw trwm', winter:'y broblem yn waeth yn y gaeaf, gyda anwedd ar y ffenestri',
-    smell:'arogl myglyd parhaus', timber:'gwaith pren meddal neu\'n dadfeilio',
-    fungus:'twf ffwngaidd, llinynnau gwynion neu lwch lliw rhwd'
+    smell:'arogl myglyd parhaus', timber:'pren meddal neu bren sy\'n dadfeilio',
+    fungus:'twf ffwngaidd, llinynnau gwyn neu lwch lliw rhwd'
   }[k])).join('; ') : '[describe what you can see]';
 
   const health = state.signs.includes('health')
