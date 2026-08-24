@@ -92,16 +92,87 @@ def sub_attr(m):
     return f'{m.group(1)}="{t}"' if t else m.group(0)
 static = re.sub(r'(placeholder|aria-label|title|alt)="([^"]+)"', sub_attr, static)
 
-# ---- 3. single-quoted strings inside the script --------------------------
+# ---- 3. strings inside the script ----------------------------------------
+# Three things this pass has to get right, each of which it previously did not:
+#
+#  a) A quoted literal cannot contain a raw newline. The old pattern allowed
+#     one, so a run like  ...getElementById('x').innerHTML = `...it's...`
+#     matched as a single 640-character "string" spanning ten lines, swallowing
+#     every real string inside it. Anchoring on \n fixes that.
+#  b) Template literals and double-quoted strings were never scanned at all.
+#  c) Most UI text is a template literal wrapping markup, so the string as a
+#     whole is not prose. Translating it wholesale is wrong; translating the
+#     TEXT NODES inside it is exactly right, and is the same thing pass 1 does
+#     to the static HTML.
+
+JS_LITERAL = re.compile(
+    r"'(?:[^'\\\n]|\\.)*'"      # single-quoted
+    r'|"(?:[^"\\\n]|\\.)*"'     # double-quoted
+    r'|`(?:[^`\\]|\\.)*`',       # template literal — may span lines
+    re.S)
+
+TAGGISH = re.compile(r'<[a-zA-Z/!]')
+
+def esc_for(quote, t):
+    """Escape a Welsh string for the quote style it is going back into."""
+    t = t.replace('\\', '\\\\')
+    if quote == "'":
+        return t.replace("'", "\\'")
+    if quote == '"':
+        return t.replace('"', '\\"')
+    return t.replace('`', '\\`').replace('${', '\\${')
+
+def look_text(s):
+    """Translate a run of user-facing text taken from inside a JS literal."""
+    key = re.sub(r'\s+', ' ', s).strip()
+    if not key or not re.search(r'[A-Za-z]{2}', key) or '\x00BLOCK' in key:
+        return None
+    if key in tr and tr[key].strip():
+        return tr[key]
+    # Record it only if it reads as something a person would see, so the
+    # "still English" count means what it says instead of listing code.
+    words = key.split()
+    looks_like_ui = re.match(r"^[A-Z\u00c0-\u017f\u2018\u201c]", key) and (
+        len(words) >= 2
+        # a lone capitalised word is still UI text when it is purely alphabetic
+        # ('Copied', 'Reported') — which also excludes fragments like T00:00:00
+        or (len(key) >= 4 and re.fullmatch(r"[A-Za-z\u00c0-\u017f'\u2019-]+", key))
+    )
+    if looks_like_ui:
+        missing.append(key)
+    return None
+
 def sub_js(m):
-    raw = m.group(1)
+    lit = m.group(0)
+    quote, raw = lit[0], lit[1:-1]
+
+    if TAGGISH.search(raw):
+        def node(nm):
+            lead, txt, trail = nm.group(1), nm.group(2), nm.group(3)
+            # Never translate across an interpolation: the English either side
+            # of ${...} is half a sentence, and the key would not be stable.
+            if '${' in txt:
+                return nm.group(0)
+            t = look_text(txt)
+            return f'>{lead}{esc_for(quote, t)}{trail}<' if t else nm.group(0)
+        return quote + re.sub(r'>(\s*)([^<>]+?)(\s*)<', node, raw) + quote
+
+    if '${' in raw:
+        return lit
+    # An explicit entry in cy.json is a deliberate instruction to translate
+    # that exact string, so honour it whatever its length — short UI labels
+    # like 'Copy letter' and 'Copied' live in button-state assignments and
+    # would otherwise never qualify as prose.
+    key = re.sub(r'\s+', ' ', raw).strip()
+    if key in tr and tr[key].strip():
+        return f'{quote}{esc_for(quote, tr[key])}{quote}'
+    if len(raw) < 15:
+        look_text(raw)          # not translatable here, but still report it
+        return lit
     t = look(raw, prose_only=True)
-    if not t:
-        return m.group(0)
-    # Welsh is full of apostrophes ('r, 'n, 'ch) which would close the JS string
-    esc = t.replace('\\', '\\\\').replace("'", "\\'")
-    return f"'{esc}'"
-js = re.sub(r"'((?:[^'\\]|\\.){15,})'", sub_js, js)
+    return f'{quote}{esc_for(quote, t)}{quote}' if t else lit
+
+js = JS_LITERAL.sub(sub_js, js)
 
 # ---- 4. head: lang, canonical, hreflang, title, description --------------
 head = head.replace('<html lang="en-GB">', '<html lang="cy">')

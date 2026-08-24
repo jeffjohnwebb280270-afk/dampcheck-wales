@@ -569,10 +569,10 @@ ${name}`;
      <textarea class="letter" id="lbody"></textarea>
      <pre id="letterprint" aria-hidden="true"></pre>
      <div class="btnrow" style="margin-top:6px">
-       <button class="btn" id="copyl">Copy letter</button>
-       <button class="btn btn--o" id="printl">Print or save as PDF</button>
+       <button class="btn" id="copyl">Copïwch y llythyr</button>
+       <button class="btn btn--o" id="printl">Argraffwch neu arbedwch fel PDF</button>
      </div>
-     <p class="small" style="margin-top:14px">Send it by email if you can — an email gives you a timestamp neither side can argue with. Keep a copy. If you hand it over on paper, photograph it first.</p>`;
+     <p class="small" style="margin-top:14px">Anfonwch ef drwy e-bost os gallwch — mae e-bost yn rhoi stamp amser na all y naill ochr na'r llall ei herio. Cadwch gopi. Os ydych yn ei drosglwyddo ar bapur, tynnwch lun ohono yn gyntaf.</p>`;
 
   const ta = document.getElementById('lbody');
   const pre = document.getElementById('letterprint');
@@ -584,7 +584,7 @@ ${name}`;
   document.getElementById('copyl').addEventListener('click', async function(){
     try{ await navigator.clipboard.writeText(ta.value); this.textContent='Copied'; }
     catch(e){ ta.select(); document.execCommand('copy'); this.textContent='Copied'; }
-    setTimeout(()=>{this.textContent='Copy letter';},2200);
+    setTimeout(()=>{this.textContent='Copïwch y llythyr';},2200);
   });
   document.getElementById('printl').addEventListener('click',()=>{
     pre.textContent = ta.value;   // print exactly what is on screen now
