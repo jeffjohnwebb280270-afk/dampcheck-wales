@@ -329,8 +329,8 @@ footer.site h4{color:#E8EDF2;font-family:var(--f-m);font-size:10px;letter-spacin
     <div class="acc" id="law" style="margin-top:22px;border-color:var(--line-d)">
       <button aria-expanded="false" style="border-color:var(--line-d);color:#E8EDF2">Addasrwydd i bobl fyw ynddo</button>
       <div class="panel" style="border-color:var(--line-d)">
-        <p style="color:rgba(232,237,242,.8)">O dan Ddeddf Rhentu Cartrefi (Cymru) 2016, mae pob contract meddiannaeth yn cynnwys term bod yn rhaid i'r landlord sicrhau bod yr annedd yn addas i bobl fyw ynddi — ar ddechrau'r contract a thrwy gydol y contract. Mae Rheoliadau Rhentu Cartrefi (Ffitrwydd Annedd i Bobl Fyw Ynddi) (Cymru) 2022 yn rhestru 29 o faterion ac amgylchiadau y mae'n rhaid i lys eu hystyried, a lleithder a thwf llwydni yw'r cyntaf ohonynt.</p>
-        <p style="color:rgba(232,237,242,.8)">Nid yw hyn yn ddewisol ac ni all eich landlord gontractio allan ohono, ni all godi tâl arnoch am ei gyflawni, ac ni all eich gwneud yn gyfrifol amdano yn eich contract. Os nad ydynt wedi rhoi datganiad ysgrifenedig i chi o'ch contract meddiannaeth, mae hynny'n fethiant ar wahân sy'n werth ei grybwyll.</p>
+        <p style="color:rgba(232,237,242,.8)">O dan Ddeddf Rhentu Cartrefi (Cymru) 2016, mae pob cytundeb meddiannaeth yn cynnwys term bod yn rhaid i'r landlord sicrhau bod yr annedd yn addas i bobl fyw ynddi — ar ddechrau'r contract a thrwy gydol y contract. Mae Rheoliadau Rhentu Cartrefi (Ffitrwydd Annedd i Bobl Fyw Ynddi) (Cymru) 2022 yn rhestru 29 o faterion ac amgylchiadau y mae'n rhaid i lys eu hystyried, a lleithder a thwf llwydni yw'r cyntaf ohonynt.</p>
+        <p style="color:rgba(232,237,242,.8)">Nid yw hyn yn ddewisol ac ni all eich landlord gontractio allan ohono, ni all godi tâl arnoch am ei gyflawni, ac ni all eich gwneud yn gyfrifol amdano yn eich contract. Os nad ydynt wedi rhoi datganiad ysgrifenedig i chi o'ch cytundeb meddiannaeth, mae hynny'n fethiant ar wahân sy'n werth ei grybwyll.</p>
       </div>
       <button aria-expanded="false" style="border-color:var(--line-d);color:#E8EDF2">Landlordiaid cymdeithasol — yr amserlenni a ddechreuodd ym mis Ebrill 2026</button>
       <div class="panel" style="border-color:var(--line-d)">
@@ -473,7 +473,7 @@ document.getElementById('diagnose').addEventListener('click',()=>{
     out.push(['Dywedwch hyn yn benodol ym mhob llythyr','Mae cynghorau\'n asesu peryglon tai yn rhannol ar bwy sy\'n agored iddynt. Mae aelwyd sy\'n cynnwys plentyn, person hŷn neu rywun ag asthma neu gyflwr anadlol arall yn codi\'r sgôr difrifoldeb, ac mae hynny\'n newid yr hyn y gall y cyngor ei fynnu i\'ch landlord ei wneud. Peidiwch byth â\'i adael allan.','late']);
 
   let who = '';
-  if(state.tenure==='private') who = '<p style="font-size:15.5px"><b>Rydych chi\'n rhentu\'n breifat.</b> Rhaid i\'ch landlord gadw\'r cartref yn addas i bobl fyw ynddo am gyfnod cyfan eich contract meddiannaeth. Rhaid iddynt hefyd fod wedi\'u cofrestru, a\'u hasiant wedi\'i drwyddedu, gyda Rhentu Doeth Cymru.</p>';
+  if(state.tenure==='private') who = '<p style="font-size:15.5px"><b>Rydych chi\'n rhentu\'n breifat.</b> Rhaid i\'ch landlord gadw\'r cartref yn addas i bobl fyw ynddo am gyfnod cyfan eich cytundeb meddiannaeth. Rhaid iddynt hefyd fod wedi\'u cofrestru, a\'u hasiant wedi\'i drwyddedu, gyda Rhentu Doeth Cymru.</p>';
   if(state.tenure==='social'){
     const invBy = addWorkingDays(today(),10);
     const doneBy = addWorkingDays(invBy,5);
