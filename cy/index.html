@@ -454,50 +454,50 @@ document.querySelectorAll('.opts').forEach(g=>{
 document.getElementById('diagnose').addEventListener('click',()=>{
   const s = state.signs, out = [];
   const box = document.getElementById('result');
-  if(!s.length){ box.innerHTML = '<p class="small" role="alert" style="color:var(--late)">Choose at least one thing you can see.</p>'; return; }
+  if(!s.length){ box.innerHTML = '<p class="small" role="alert" style="color:var(--late)">Dewiswch o leiaf un peth y gallwch chi ei weld.</p>'; return; }
 
   if(s.includes('fungus'))
-    out.push(['Possible dry rot — get this looked at quickly','Mae llwch coch-rwd a llinynnau gwyn yn pwyntio at ffwng sy\'n teithio trwy waith maen ac yn bwyta pren strwythurol. Mae angen ffynhonnell ddŵr barhaus arno, felly mae rhywbeth yn gollwng. Dyma\'r un math o leithder sy\'n mynd yn llawer gwaeth ac yn ddrytach po hiraf y caiff ei adael. Rhowch wybod amdano heddiw a defnyddiwch y gair "ffwng" yn ysgrifenedig.','late']);
+    out.push(['Pydredd sych posibl — edrychwch ar hyn yn gyflym','Mae llwch coch-rwd a llinynnau gwyn yn pwyntio at ffwng sy\'n teithio trwy waith maen ac yn bwyta pren strwythurol. Mae angen ffynhonnell ddŵr barhaus arno, felly mae rhywbeth yn gollwng. Dyma\'r un math o leithder sy\'n mynd yn llawer gwaeth ac yn ddrytach po hiraf y caiff ei adael. Rhowch wybod amdano heddiw a defnyddiwch y gair "ffwng" yn ysgrifenedig.','late']);
   if(s.includes('timber') && !s.includes('fungus'))
-    out.push(['Wet rot is likely','Pren meddal, tywyll, yn dadfeilio mewn ardal wlyb. Wedi\'i gynnwys a gellir ei drwsio — ond nid yw\'r dŵr sy\'n cyrraedd yno wedi\'i atal, felly mae ailosod y pren yn unig yn prynu tua blwyddyn.','warn']);
+    out.push(['Mae pydredd gwlyb yn debygol','Pren meddal, tywyll, yn dadfeilio mewn ardal wlyb. Wedi\'i gynnwys a gellir ei drwsio — ond nid yw\'r dŵr sy\'n cyrraedd yno wedi\'i atal, felly mae ailosod y pren yn unig yn prynu tua blwyddyn.','warn']);
   if(s.includes('patch') || s.includes('rain'))
-    out.push(['Points to penetrating damp','Dŵr yn croesi\'r wal o\'r tu allan trwy nam penodol: rendr wedi cracio, pwyntio wedi methu, pibell lawr wedi hollti, llechen wedi llithro, fflachio simnai. Mae\'n atgyweiriad adeilad ac yn union atgyweiriad landlord. Dywedwch yn eich llythyr ei fod yn gwaethygu ar ôl glaw — mae\'r manylyn hwnnw\'n gwneud llawer o waith.','warn']);
+    out.push(['Yn pwyntio at leithder treiddiol','Dŵr yn croesi\'r wal o\'r tu allan trwy nam penodol: rendr wedi cracio, pwyntio wedi methu, pibell lawr wedi hollti, llechen wedi llithro, fflachio simnai. Mae\'n atgyweiriad adeilad ac yn union atgyweiriad landlord. Dywedwch yn eich llythyr ei fod yn gwaethygu ar ôl glaw — mae\'r manylyn hwnnw\'n gwneud llawer o waith.','warn']);
   if(s.includes('mould') || s.includes('winter'))
-    out.push(['Consistent with condensation and mould','Mowld smotiau du mewn corneli oer, yn waeth yn y gaeaf. Mae\'n debyg y dywedir wrthych mai eich ffordd o fyw ydyw. Gwiriwch a yw\'r ffannau echdynnu yn gweithio mewn gwirionedd ac a yw\'r ffenestri\'n agor — os nad ydynt, mae\'r rheini\'n ddiffygion, maent yn rhad i\'w trwsio, ac maent yn symud y ddadl yn ôl lle mae\'n perthyn.','warn']);
+    out.push(['Yn gyson ag anwedd a llwydni','Mowld smotiau du mewn corneli oer, yn waeth yn y gaeaf. Mae\'n debyg y dywedir wrthych mai eich ffordd o fyw ydyw. Gwiriwch a yw\'r ffannau echdynnu yn gweithio mewn gwirionedd ac a yw\'r ffenestri\'n agor — os nad ydynt, mae\'r rheini\'n ddiffygion, maent yn rhad i\'w trwsio, ac maent yn symud y ddadl yn ôl lle mae\'n perthyn.','warn']);
   if((s.includes('tide')||s.includes('plaster')||s.includes('smell')) && !s.includes('rain') && !s.includes('patch'))
-    out.push(['Worth ruling out rising damp','A level tide mark with salty, blown plaster fits rising damp — but it also fits a leak below floor level, ground piled up against an outside wall, or a blocked airbrick. It is diagnosed far more often than it actually occurs. Either way, a wall in that state is your landlord&rsquo;s to investigate.','warn']);
+    out.push(['Yn werth diystyru lleithder sy\'n codi','A level tide mark with salty, blown plaster fits rising damp — but it also fits a leak below floor level, ground piled up against an outside wall, or a blocked airbrick. It is diagnosed far more often than it actually occurs. Either way, a wall in that state is your landlord&rsquo;s to investigate.','warn']);
   if(!out.length)
-    out.push(['Not clear-cut — report it anyway','What you have described does not point in one direction, which is common. It is not your job to diagnose it. Your landlord&rsquo;s duty is to keep the home fit to live in, and that duty is triggered by the home being unfit — not by you proving why.','warn']);
+    out.push(['Nid yw\'n glir — rhowch wybod amdano beth bynnag','What you have described does not point in one direction, which is common. It is not your job to diagnose it. Your landlord&rsquo;s duty is to keep the home fit to live in, and that duty is triggered by the home being unfit — not by you proving why.','warn']);
 
   if(s.includes('health'))
-    out.push(['Say this explicitly in every letter','Mae cynghorau\'n asesu peryglon tai yn rhannol ar bwy sy\'n agored iddynt. Mae aelwyd sy\'n cynnwys plentyn, person hŷn neu rywun ag asthma neu gyflwr anadlol arall yn codi\'r sgôr difrifoldeb, ac mae hynny\'n newid yr hyn y gall y cyngor ei fynnu i\'ch landlord ei wneud. Peidiwch byth â\'i adael allan.','late']);
+    out.push(['Dywedwch hyn yn benodol ym mhob llythyr','Mae cynghorau\'n asesu peryglon tai yn rhannol ar bwy sy\'n agored iddynt. Mae aelwyd sy\'n cynnwys plentyn, person hŷn neu rywun ag asthma neu gyflwr anadlol arall yn codi\'r sgôr difrifoldeb, ac mae hynny\'n newid yr hyn y gall y cyngor ei fynnu i\'ch landlord ei wneud. Peidiwch byth â\'i adael allan.','late']);
 
   let who = '';
-  if(state.tenure==='private') who = '<p style="font-size:15.5px"><b>You rent privately.</b> Your landlord must keep the home fit for human habitation for the whole of your occupation contract. They must also be registered, and their agent licensed, with Rent Smart Wales.</p>';
+  if(state.tenure==='private') who = '<p style="font-size:15.5px"><b>Rydych chi\'n rhentu\'n breifat.</b> Rhaid i\'ch landlord gadw\'r cartref yn addas i bobl fyw ynddo am gyfnod cyfan eich contract meddiannaeth. Rhaid iddynt hefyd fod wedi\'u cofrestru, a\'u hasiant wedi\'i drwyddedu, gyda Rhentu Doeth Cymru.</p>';
   if(state.tenure==='social'){
     const invBy = addWorkingDays(today(),10);
     const doneBy = addWorkingDays(invBy,5);
-    who = '<p style="font-size:15.5px"><b>You are a social contract-holder.</b> Since 1 April 2026 the Welsh Housing Quality Standard gives your landlord fixed timescales for damp and mould. Where there is significant risk with likely imminent harm, they must investigate within 24 hours and remedy within a further 24 hours. Otherwise, they must investigate within 10 working days and remedy within a further 5 working days — reported today, that is investigate by <b>' + short(invBy) + '</b> and remedy by <b>' + short(doneBy) + '</b>. If that timescale cannot be met, they must send you a written summary plan within 5 working days. Use your landlord&rsquo;s formal complaints procedure first, then the Public Services Ombudsman for Wales — both free.</p>';
+    who = '<p style="font-size:15.5px"><b>Rydych chi\'n ddeiliad contract cymdeithasol.</b> Ers 1 Ebrill 2026 mae Safon Ansawdd Tai Cymru yn rhoi amserlenni penodol i\'ch landlord ar gyfer lleithder a llwydni. Lle mae risg sylweddol gyda niwed tebygol ar fin digwydd, rhaid iddynt ymchwilio o fewn 24 awr a\'i gywiro o fewn 24 awr arall. Fel arall, rhaid iddynt ymchwilio o fewn 10 diwrnod gwaith a\'i gywiro o fewn 5 diwrnod gwaith arall — yn ôl yr adroddiad heddiw, hynny yw ymchwilio erbyn <b>' + short(invBy) + '</b> and remedy by <b>' + short(doneBy) + '</b>. If that timescale cannot be met, they must send you a written summary plan within 5 working days. Use your landlord&rsquo;s formal complaints procedure first, then the Public Services Ombudsman for Wales — both free.</p>';
   }
-  if(state.tenure==='owner') who = '<p style="font-size:15.5px"><b>You own your home.</b> There is no landlord to pursue, so the legal half of this tool will not help you. The diagnosis above still stands — and get the cause identified before anyone sells you a treatment.</p>';
+  if(state.tenure==='owner') who = '<p style="font-size:15.5px"><b>Rydych chi\'n berchen ar eich cartref.</b> Nid oes landlord i\'w ddilyn, felly ni fydd hanner cyfreithiol yr offeryn hwn o gymorth i chi. Mae\'r diagnosis uchod yn dal i sefyll — a chael yr achos wedi\'i nodi cyn i unrhyw un werthu triniaeth i chi.</p>';
 
   box.innerHTML = out.map(([h,p,cls])=>
     `<div class="dl ${cls}"><h4>${h}</h4><p style="color:var(--ink);font-size:15.5px;margin-top:6px">${p}</p></div>`).join('')
-    + who + '<p class="small">This is an indication from what you have described, not a diagnosis. Only someone standing in the room can confirm the cause.</p>'
-    + '<div class="btnrow"><a class="btn" href="#record">Next — build the record</a></div>';
+    + who + '<p class="small">Mae hwn yn arwydd o\'r hyn rydych chi wedi\'i ddisgrifio, nid diagnosis. Dim ond rhywun sy\'n sefyll yn yr ystafell all gadarnhau\'r achos.</p>'
+    + '<div class="btnrow"><a class="btn" href="#record">Nesaf — adeiladwch y cofnod</a></div>';
   box.scrollIntoView({behavior:'smooth',block:'nearest'});
 });
 
 document.getElementById('calc').addEventListener('click',()=>{
   const box = document.getElementById('dlout');
   const v = document.getElementById('reported').value;
-  if(!v){ box.innerHTML='<p class="small" role="alert" style="color:#FFD9D9">Put in the date you reported it.</p>'; return; }
+  if(!v){ box.innerHTML='<p class="small" role="alert" style="color:#FFD9D9">Rhowch y dyddiad y gwnaethoch chi ei adrodd.</p>'; return; }
   const rep = new Date(v+'T00:00:00'); const now = today();
-  if(rep > now){ box.innerHTML='<p class="small" role="alert" style="color:#FFD9D9">That date is in the future.</p>'; return; }
+  if(rep > now){ box.innerHTML='<p class="small" role="alert" style="color:#FFD9D9">Mae\'r dyddiad hwnnw yn y dyfodol.</p>'; return; }
 
   const days = Math.round((now-rep)/864e5);
   const stages = [
-    [0,  'Reported', 'Gwnewch hyn yn ysgrifenedig heddiw os nad ydych wedi gwneud hynny eisoes. Nid oes llawer o werth yn ddiweddarach i alwad ffôn na ellir profi ei bod wedi digwydd.', '#letter', 'Ysgrifennu\'r llythyr'],
+    [0,  'Wedi\'i adrodd', 'Gwnewch hyn yn ysgrifenedig heddiw os nad ydych wedi gwneud hynny eisoes. Nid oes llawer o werth yn ddiweddarach i alwad ffôn na ellir profi ei bod wedi digwydd.', '#letter', 'Ysgrifennu\'r llythyr'],
     [14, 'Dilyn i fyny yn ysgrifenedig', 'Mae pythefnos heb drefnu archwiliad yn ddigon hir i wneud ymholiad dilynol. Atebwch eich e-bost eich hun fel bod y stamp amser gwreiddiol yn aros yn gyfan.', '#letter', 'Write a chaser'],
     [28, 'Iechyd yr amgylchedd y cyngor', 'Mis heb ddim wedi\'i wneud yw\'r pwynt i gynnwys eich cyngor. Mae hyn am ddim, nid oes angen cyfreithiwr arno, a dyma\'r llwybr y mae landlordiaid yn ei gymryd o ddifrif.', null, null],
     [56, 'Rhentu Doeth Cymru, neu\'r Ombwdsmon', 'Dau fis. Os yw\'n breifat, rhowch wybod am y landlord i Rentu Doeth Cymru. Os yw\'n gymdeithasol, dylai eich cwyn fod trwy eu proses ac yn barod ar gyfer Ombwdsmon Gwasanaethau Cyhoeddus Cymru.', null, null]
@@ -510,13 +510,13 @@ document.getElementById('calc').addEventListener('click',()=>{
     const reached = days >= d;
     const cls = !reached ? 'ok' : (d>=28 ? 'late' : 'warn');
     const pill = !reached ? `<span class="pill ok">From ${short(addDays(rep,d))}</span>`
-                          : `<span class="pill ${d>=28?'late':'warn'}">Available now</span>`;
+                          : `<span class="pill ${d>=28?'late':'warn'}">Ar gael nawr</span>`;
     html += `<div class="dl ${cls}"><h4>${title} ${pill}</h4>
       <p style="color:${reached?'#EBF2ED':'rgba(235,242,237,.6)'};font-size:15px;margin-top:6px">${text}</p>
       ${reached && href ? `<div class="btnrow" style="margin-top:12px"><a class="btn btn--l" href="${href}">${label}</a></div>` : ''}</div>`;
   });
 
-  html += `<p class="small" style="color:rgba(235,242,237,.7);margin-top:6px">Screenshot or print this. A dated record of what you did and when is the whole game in Wales.</p>`;
+  html += `<p class="small" style="color:rgba(235,242,237,.7);margin-top:6px">Sgrinlun neu argraffwch hwn. Cofnod dyddiedig o'r hyn a wnaethoch chi a phryd mae'r gêm gyfan yng Nghymru.</p>`;
   box.innerHTML = html;
 });
 
@@ -565,7 +565,7 @@ Yours sincerely,
 ${name}`;
 
   document.getElementById('letterout').innerHTML =
-    `<label class="fl">Your letter — check it, edit anything, then copy</label>
+    `<label class="fl">Eich llythyr — gwiriwch ef, golygwch unrhyw beth, yna copïwch</label>
      <textarea class="letter" id="lbody"></textarea>
      <pre id="letterprint" aria-hidden="true"></pre>
      <div class="btnrow" style="margin-top:6px">
@@ -582,8 +582,8 @@ ${name}`;
   ta.addEventListener('input', () => { pre.textContent = ta.value; });
 
   document.getElementById('copyl').addEventListener('click', async function(){
-    try{ await navigator.clipboard.writeText(ta.value); this.textContent='Copied'; }
-    catch(e){ ta.select(); document.execCommand('copy'); this.textContent='Copied'; }
+    try{ await navigator.clipboard.writeText(ta.value); this.textContent='Wedi\'i gopïo'; }
+    catch(e){ ta.select(); document.execCommand('copy'); this.textContent='Wedi\'i gopïo'; }
     setTimeout(()=>{this.textContent='Copïwch y llythyr';},2200);
   });
   document.getElementById('printl').addEventListener('click',()=>{
