@@ -463,7 +463,7 @@ document.getElementById('diagnose').addEventListener('click',()=>{
   if(s.includes('patch') || s.includes('rain'))
     out.push(['Yn pwyntio at leithder treiddiol','Dŵr yn croesi\'r wal o\'r tu allan trwy nam penodol: rendr wedi cracio, pwyntio wedi methu, pibell lawr wedi hollti, llechen wedi llithro, fflachio simnai. Mae\'n atgyweiriad adeilad ac yn union atgyweiriad landlord. Dywedwch yn eich llythyr ei fod yn gwaethygu ar ôl glaw — mae\'r manylyn hwnnw\'n gwneud llawer o waith.','warn']);
   if(s.includes('mould') || s.includes('winter'))
-    out.push(['Yn gyson ag anwedd a llwydni','Mowld smotiau du mewn corneli oer, yn waeth yn y gaeaf. Mae\'n debyg y dywedir wrthych mai eich ffordd o fyw ydyw. Gwiriwch a yw\'r ffannau echdynnu yn gweithio mewn gwirionedd ac a yw\'r ffenestri\'n agor — os nad ydynt, mae\'r rheini\'n ddiffygion, maent yn rhad i\'w trwsio, ac maent yn symud y ddadl yn ôl lle mae\'n perthyn.','warn']);
+    out.push(['Yn gyson â chyddwysiad a llwydni','Mowld smotiau du mewn corneli oer, yn waeth yn y gaeaf. Mae\'n debyg y dywedir wrthych mai eich ffordd o fyw ydyw. Gwiriwch a yw\'r ffannau echdynnu yn gweithio mewn gwirionedd ac a yw\'r ffenestri\'n agor — os nad ydynt, mae\'r rheini\'n ddiffygion, maent yn rhad i\'w trwsio, ac maent yn symud y ddadl yn ôl lle mae\'n perthyn.','warn']);
   if((s.includes('tide')||s.includes('plaster')||s.includes('smell')) && !s.includes('rain') && !s.includes('patch'))
     out.push(['Yn werth diystyru lleithder sy\'n codi','Mae marc llinell lefel gyda phlastr hallt sydd wedi chwyddo neu ddadfeilio yn cyd-fynd â lleithder sy\'n codi o\'r ddaear — ond mae hefyd yn cyd-fynd â gollyngiad o dan lefel y llawr, pridd wedi\'i bentyrru yn erbyn wal allanol, neu fricsen awyru sydd wedi\'i rhwystro. Gwneir diagnosis ohono lawer yn amlach nag y mae\'n digwydd mewn gwirionedd. Beth bynnag fo\'r achos, cyfrifoldeb eich landlord yw ymchwilio i wal sydd yn y cyflwr hwnnw.','warn']);
   if(!out.length)
@@ -530,7 +530,7 @@ document.getElementById('genletter').addEventListener('click',()=>{
   const signs = state.signs.filter(k=>k!=='health').length ? state.signs.filter(k=>k!=='health').map(k=>({
     tide:'marc llinell isel ar y wal', mould:'llwydni gyda smotiau duon',
     plaster:'plastr sy\'n swigenu, yn chwyddo, yn dadfeilio neu\'n hallt', patch:'man llaith mewn un lle penodol',
-    rain:'y broblem yn gwaethygu ar ôl glaw trwm', winter:'y broblem yn waeth yn y gaeaf, gyda anwedd ar y ffenestri',
+    rain:'y broblem yn gwaethygu ar ôl glaw trwm', winter:'y broblem yn waeth yn y gaeaf, gyda chyddwysiad ar y ffenestri',
     smell:'arogl myglyd parhaus', timber:'pren meddal neu bren sy\'n dadfeilio',
     fungus:'twf ffwngaidd, llinynnau gwyn neu lwch lliw rhwd'
   }[k])).join('; ') : '[describe what you can see]';
