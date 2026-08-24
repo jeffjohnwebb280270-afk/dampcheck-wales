@@ -47,7 +47,11 @@ def is_prose(key):
     """Prose, not a code fragment. Guards the script-string pass."""
     if len(key.split()) < PROSE_MIN_WORDS:
         return False
-    if re.search(r'[{}();=<>]|=>|\bfunction\b|\bconst\b|classList|querySelector', key):
+    # An HTML entity is prose, not code, but &rsquo; carries a semicolon and
+    # &amp; an ampersand — enough for the code test below to throw out a whole
+    # sentence for containing a typographic apostrophe. Test without them.
+    probe = re.sub(r'&[a-zA-Z]+;|&#\d+;', '', key)
+    if re.search(r'[{}();=<>]|=>|\bfunction\b|\bconst\b|classList|querySelector', probe):
         return False
     return bool(re.match(r"^[A-Z\u00c0-\u017f\"\u2018\u201c]", key.strip()))
 
