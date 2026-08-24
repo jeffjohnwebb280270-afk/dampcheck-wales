@@ -156,7 +156,14 @@ footer.site h4{color:#E8EDF2;font-family:var(--f-m);font-size:10px;letter-spacin
 .band--deep .note b,.band--ink .note b{color:#fff}
 .band--deep .dl p,.band--ink .dl p{color:rgba(255,255,255,.72)}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}html{scroll-behavior:auto}}
-@media print{header.site,footer.site,.btnrow,.noprint{display:none!important}body{background:#fff}}
+#letterprint{display:none}
+@media print{
+  header.site,footer.site,.btnrow,.noprint{display:none!important}
+  body{background:#fff}
+  /* a textarea prints only the visible box — print the mirrored text instead */
+  .letter{display:none!important}
+  #letterprint{display:block!important;white-space:pre-wrap;font-family:var(--f-m);font-size:12px;line-height:1.6}
+}
 
 .langsw{display:flex;align-items:center;gap:2px;margin-left:auto;border:1px solid rgba(232,237,242,.28);border-radius:3px;overflow:hidden}
 .lang-opt{display:flex;align-items:center;gap:6px;padding:6px 10px;text-decoration:none;color:rgba(232,237,242,.72);
@@ -225,7 +232,7 @@ footer.site h4{color:#E8EDF2;font-family:var(--f-m);font-size:10px;letter-spacin
         <button class="opt" data-v="health">Someone here has a health condition<small>Asthma, COPD, a baby, or someone elderly</small></button>
       </div>
       <div class="btnrow"><button class="btn" id="diagnose">Show me what this suggests</button></div>
-      <div id="result" style="margin-top:22px"></div>
+      <div id="result" role="status" aria-live="polite" style="margin-top:22px"></div>
     </div>
   </div>
 </div>
@@ -240,7 +247,7 @@ footer.site h4{color:#E8EDF2;font-family:var(--f-m);font-size:10px;letter-spacin
       <input type="date" id="reported">
       <p class="small" style="margin:-2px 0 16px">Use the <b>first</b> date you told them, even if it was a phone call or a text. If you have reported it several times, we will get to that in the letter.</p>
       <div class="btnrow" style="margin-top:0"><button class="btn" id="calc">Show me where I stand</button></div>
-      <div id="dlout" style="margin-top:24px"></div>
+      <div id="dlout" role="status" aria-live="polite" style="margin-top:24px"></div>
     </div>
 
     <div class="note">
@@ -281,7 +288,7 @@ footer.site h4{color:#E8EDF2;font-family:var(--f-m);font-size:10px;letter-spacin
       <label class="fl" for="lextra">Anything else they should know</label>
       <textarea id="lextra" rows="3" placeholder="I reported this by phone on 3 March and again on 20 April. My daughter has asthma. The extractor fan in the bathroom has never worked."></textarea>
       <div class="btnrow"><button class="btn" id="genletter">Write my letter</button></div>
-      <div id="letterout" style="margin-top:22px"></div>
+      <div id="letterout" role="status" aria-live="polite" style="margin-top:22px"></div>
     </div>
   </div>
 </div>
@@ -428,11 +435,18 @@ document.getElementById('yr').textContent = new Date().getFullYear();
 
 const state = { tenure:'', signs:[] };
 document.querySelectorAll('.opts').forEach(g=>{
+  const single = g.dataset.mode==='one';
+  if(single) g.setAttribute('role','radiogroup');
   g.querySelectorAll('.opt').forEach(b=>{
+    if(single){ b.setAttribute('role','radio'); b.setAttribute('aria-checked','false'); }
+    else b.setAttribute('aria-pressed','false');
     b.addEventListener('click',()=>{
       const k=g.dataset.g;
-      if(g.dataset.mode==='one'){ g.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); b.classList.add('sel'); state[k]=b.dataset.v; }
-      else { b.classList.toggle('sel'); state[k]=[...g.querySelectorAll('.opt.sel')].map(o=>o.dataset.v); }
+      if(single){
+        g.querySelectorAll('.opt').forEach(o=>{ o.classList.remove('sel'); o.setAttribute('aria-checked','false'); });
+        b.classList.add('sel'); b.setAttribute('aria-checked','true'); state[k]=b.dataset.v;
+      }
+      else { b.classList.toggle('sel'); b.setAttribute('aria-pressed', b.classList.contains('sel')); state[k]=[...g.querySelectorAll('.opt.sel')].map(o=>o.dataset.v); }
     });
   });
 });
@@ -440,7 +454,7 @@ document.querySelectorAll('.opts').forEach(g=>{
 document.getElementById('diagnose').addEventListener('click',()=>{
   const s = state.signs, out = [];
   const box = document.getElementById('result');
-  if(!s.length){ box.innerHTML = '<p class="small" style="color:var(--late)">Choose at least one thing you can see.</p>'; return; }
+  if(!s.length){ box.innerHTML = '<p class="small" role="alert" style="color:var(--late)">Choose at least one thing you can see.</p>'; return; }
 
   if(s.includes('fungus'))
     out.push(['Possible dry rot — get this looked at quickly','Rust-red dust and white strands point to a fungus that travels through masonry and eats structural timber. It needs a persistent water source, so something is leaking. This is the one form of damp that gets significantly worse and more expensive the longer it is left. Report it today and use the word "fungus" in writing.','late']);
@@ -477,9 +491,9 @@ document.getElementById('diagnose').addEventListener('click',()=>{
 document.getElementById('calc').addEventListener('click',()=>{
   const box = document.getElementById('dlout');
   const v = document.getElementById('reported').value;
-  if(!v){ box.innerHTML='<p class="small" style="color:#FFD9D9">Put in the date you reported it.</p>'; return; }
+  if(!v){ box.innerHTML='<p class="small" role="alert" style="color:#FFD9D9">Put in the date you reported it.</p>'; return; }
   const rep = new Date(v+'T00:00:00'); const now = today();
-  if(rep > now){ box.innerHTML='<p class="small" style="color:#FFD9D9">That date is in the future.</p>'; return; }
+  if(rep > now){ box.innerHTML='<p class="small" role="alert" style="color:#FFD9D9">That date is in the future.</p>'; return; }
 
   const days = Math.round((now-rep)/864e5);
   const stages = [
@@ -552,24 +566,37 @@ ${name}`;
 
   document.getElementById('letterout').innerHTML =
     `<label class="fl">Your letter — check it, edit anything, then copy</label>
-     <textarea class="letter" id="lbody">${body.replace(/</g,'&lt;')}</textarea>
+     <textarea class="letter" id="lbody"></textarea>
+     <pre id="letterprint" aria-hidden="true"></pre>
      <div class="btnrow" style="margin-top:6px">
        <button class="btn" id="copyl">Copy letter</button>
        <button class="btn btn--o" id="printl">Print or save as PDF</button>
      </div>
      <p class="small" style="margin-top:14px">Send it by email if you can — an email gives you a timestamp neither side can argue with. Keep a copy. If you hand it over on paper, photograph it first.</p>`;
 
+  const ta = document.getElementById('lbody');
+  const pre = document.getElementById('letterprint');
+  // .value takes the text verbatim — no HTML escaping to get wrong.
+  ta.value = body;
+  pre.textContent = body;
+  ta.addEventListener('input', () => { pre.textContent = ta.value; });
+
   document.getElementById('copyl').addEventListener('click', async function(){
-    const ta=document.getElementById('lbody');
     try{ await navigator.clipboard.writeText(ta.value); this.textContent='Copied'; }
     catch(e){ ta.select(); document.execCommand('copy'); this.textContent='Copied'; }
     setTimeout(()=>{this.textContent='Copy letter';},2200);
   });
-  document.getElementById('printl').addEventListener('click',()=>window.print());
+  document.getElementById('printl').addEventListener('click',()=>{
+    pre.textContent = ta.value;   // print exactly what is on screen now
+    window.print();
+  });
   document.getElementById('letterout').scrollIntoView({behavior:'smooth',block:'nearest'});
 });
 
-document.querySelectorAll('.acc button').forEach(b=>{
+document.querySelectorAll('.acc button').forEach((b,i)=>{
+  const panel = b.nextElementSibling;
+  panel.id = panel.id || `acc-panel-${i+1}`;
+  b.setAttribute('aria-controls', panel.id);
   b.addEventListener('click',()=>{
     const open=b.getAttribute('aria-expanded')==='true';
     b.setAttribute('aria-expanded',!open);
