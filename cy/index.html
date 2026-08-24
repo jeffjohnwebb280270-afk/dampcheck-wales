@@ -528,11 +528,11 @@ document.getElementById('genletter').addEventListener('click',()=>{
   const t = today();
   const firstTxt = first ? short(new Date(first+'T00:00:00')) : '[date you first noticed it]';
   const signs = state.signs.filter(k=>k!=='health').length ? state.signs.filter(k=>k!=='health').map(k=>({
-    tide:'a tide mark low down the wall', mould:'black spotted mould',
-    plaster:'bubbling, blown or salty plaster', patch:'a damp patch in one specific place',
-    rain:'the problem getting worse after heavy rain', winter:'the problem being worse in winter, with condensation on the windows',
-    smell:'a persistent musty smell', timber:'soft or crumbling woodwork',
-    fungus:'fungal growth, white strands or rust-red dust'
+    tide:'marc llanw isel ar y wal', mould:'llwydni gyda smotiau duon',
+    plaster:'plastr yn swigenu, yn chwyddo neu\'n dangos olion halen', patch:'man llaith mewn un lle penodol',
+    rain:'y broblem yn gwaethygu ar ôl glaw trwm', winter:'y broblem yn waeth yn y gaeaf, gyda anwedd ar y ffenestri',
+    smell:'arogl myglyd parhaus', timber:'gwaith pren meddal neu\'n dadfeilio',
+    fungus:'twf ffwngaidd, llinynnau gwynion neu lwch lliw rhwd'
   }[k])).join('; ') : '[describe what you can see]';
 
   const health = state.signs.includes('health')
