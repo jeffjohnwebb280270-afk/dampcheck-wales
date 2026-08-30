@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://www.dampcheckwales.co.uk/sitemap.xml
+Sitemap: https://www.dampcheckwales.co.uk/shop/sitemap.xml
